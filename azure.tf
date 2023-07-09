@@ -32,7 +32,7 @@ resource "azurerm_subnet" "internal" {
   name                 = "internal"
   resource_group_name  = azurerm_resource_group.main.name
   virtual_network_name = azurerm_virtual_network.main.name
-  address_prefix       = "10.0.2.0/24"
+  address_prefixes     = ["10.0.2.0/24"]
 }
 
 resource "azurerm_network_interface" "main" {
@@ -96,8 +96,8 @@ resource "azurerm_virtual_machine" "main" {
 
 
 data "azurerm_virtual_machine" "example" {
-  name                = azurerm_linux_virtual_machine.example.name
-  resource_group_name = azurerm_resource_group.example.name
+  name                = azurerm_linux_virtual_machine.main.name
+  resource_group_name = azurerm_resource_group.main.name
 }
  
 check "check_vm_state" {
@@ -116,6 +116,14 @@ locals {
   month_in_hour_duration = "${24 * 30}h"
 }
  
+resource "azurerm_app_service_certificate" "example" {
+  name                = "example-cert"
+  resource_group_name = azurerm_resource_group.main.name
+  location            = azurerm_resource_group.main.location
+  pfx_blob            = filebase64("certificate.pfx")
+  password            = "terraform"
+}
+
 data "azurerm_app_service_certificate" "example" {
   name                = azurerm_app_service_certificate.example.name
   resource_group_name = azurerm_app_service_certificate.example.resource_group_name
