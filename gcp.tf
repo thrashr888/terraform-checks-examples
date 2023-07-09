@@ -35,7 +35,7 @@ check "check_vm_status" {
 # ----------------------------------------
 
 locals {
-  month_in_hour_duration = "${24 * 30}h"
+  # month_in_hour_duration = "${24 * 30}h" # added elsewhere
   month_and_2min_in_second_duration = "${(60 * 60 * 24 * 30) + (60 * 2)}s"
 }
  
@@ -129,8 +129,7 @@ resource "google_privateca_certificate" "default" {
   pem_csr               = tls_cert_request.example.cert_request_pem
 }
  
-check "check_certificate_state" {
- 
+check "check_gcp_certificate_state" {
   assert {
     condition = timecmp(plantimestamp(), timeadd(
 google_privateca_certificate.default.certificate_description[0].subject_description[0].not_after_time,
