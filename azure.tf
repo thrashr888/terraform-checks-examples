@@ -1,3 +1,10 @@
+variable "azurerm_linux_virtual_machine_example_name" {
+
+}
+variable "azurerm_resource_group_example_name" {
+
+}
+
 data "azurerm_virtual_machine" "example" {
   name                = azurerm_linux_virtual_machine.example.name
   resource_group_name = azurerm_resource_group.example.name
@@ -37,6 +44,12 @@ check "check_certificate_state" {
 }
 
 # ---------------------------------
+variable "azurerm_linux_function_app_example_name" {
+
+}
+variable "azurerm_linux_function_app_example_name" {
+
+}
 
 data "azurerm_linux_function_app" "example" {
   name                = azurerm_linux_function_app.example.name
