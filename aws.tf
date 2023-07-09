@@ -12,6 +12,8 @@ check "check_budget_exceeded" {
   }
 }
 
+# --------------------------------
+
 data "aws_guardduty_detector" "example" {}
  
 check "check_guardduty_findings" {
