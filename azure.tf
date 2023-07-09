@@ -94,12 +94,18 @@ resource "azurerm_virtual_machine" "main" {
   }
 }
 
+
 check "check_vm_state" {
+  data "azurerm_virtual_machine" "example" {
+    name                = azurerm_virtual_machine.main.name
+    resource_group_name = azurerm_resource_group.main.name
+  }
+
   assert {
-    condition = azurerm_virtual_machine.main.power_state == "running"
+    condition = data.azurerm_virtual_machine.example.power_state == "running"
     error_message = format("Virtual Machine (%s) should be in a 'running' status, instead state is '%s'",
-      azurerm_virtual_machine.main.id,
-      azurerm_virtual_machine.main.power_state
+      data.azurerm_virtual_machine.example.id,
+      data.azurerm_virtual_machine.example.power_state
     )
   }
 }
@@ -114,7 +120,7 @@ resource "azurerm_app_service_certificate" "example" {
   name                = "example-cert"
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
-  pfx_blob            = filebase64("certificate.pfx")
+  pfx_blob            = filebase64("host.pfx")
   password            = "terraform"
 }
 
