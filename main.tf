@@ -5,11 +5,11 @@ terraform {
       version = "~> 5.7.0"
     }
     azurerm = {
-      source = "hashicorp/azurerm"
+      source  = "hashicorp/azurerm"
       version = "3.64.0"
     }
     google = {
-      source = "hashicorp/google"
+      source  = "hashicorp/google"
       version = "4.72.1"
     }
   }
@@ -24,6 +24,6 @@ provider "azurerm" {
 }
 
 provider "google" {
-  project     = "my-project-id"
-  region      = "us-central1"
+  project = "thrashr888-1"
+  region  = "us-west1"
 }
