@@ -94,18 +94,12 @@ resource "azurerm_virtual_machine" "main" {
   }
 }
 
-
-data "azurerm_virtual_machine" "example" {
-  name                = azurerm_linux_virtual_machine.main.name
-  resource_group_name = azurerm_resource_group.main.name
-}
- 
 check "check_vm_state" {
   assert {
-    condition = data.azurerm_virtual_machine.example.power_state == "running"
+    condition = azurerm_virtual_machine.main.power_state == "running"
     error_message = format("Virtual Machine (%s) should be in a 'running' status, instead state is '%s'",
-      data.azurerm_virtual_machine.example.id,
-      data.azurerm_virtual_machine.example.power_state
+      azurerm_virtual_machine.main.id,
+      azurerm_virtual_machine.main.power_state
     )
   }
 }
@@ -115,7 +109,7 @@ check "check_vm_state" {
 locals {
   month_in_hour_duration = "${24 * 30}h"
 }
- 
+
 resource "azurerm_app_service_certificate" "example" {
   name                = "example-cert"
   resource_group_name = azurerm_resource_group.main.name
@@ -128,12 +122,12 @@ data "azurerm_app_service_certificate" "example" {
   name                = azurerm_app_service_certificate.example.name
   resource_group_name = azurerm_app_service_certificate.example.resource_group_name
 }
- 
+
 check "check_certificate_state" {
   assert {
     condition = timecmp(plantimestamp(), timeadd(
       data.azurerm_app_service_certificate.example.expiration_date,
-      "-${local.month_in_hour_duration}")) < 0
+    "-${local.month_in_hour_duration}")) < 0
     error_message = format("App Service Certificate (%s) is valid for at least 30 days, but is due to expire on `%s`.",
       data.azurerm_app_service_certificate.example.id,
       data.azurerm_app_service_certificate.example.expiration_date
@@ -149,6 +143,14 @@ resource "azurerm_storage_account" "example" {
   location                 = azurerm_resource_group.main.location
   account_tier             = "Standard"
   account_replication_type = "LRS"
+}
+
+resource "azurerm_service_plan" "example" {
+  name                = "example-app-service-plan"
+  resource_group_name = azurerm_resource_group.main.name
+  location            = azurerm_resource_group.main.location
+  os_type             = "Linux"
+  sku_name            = "B1"
 }
 
 resource "azurerm_linux_function_app" "example" {
@@ -167,7 +169,7 @@ data "azurerm_linux_function_app" "example" {
   name                = azurerm_linux_function_app.example.name
   resource_group_name = azurerm_linux_function_app.example.resource_group_name
 }
- 
+
 check "check_usage_limit" {
   assert {
     condition = data.azurerm_linux_function_app.example.usage == "Exceeded"
