@@ -112,9 +112,9 @@ check "check_vm_state" {
 
 # ----------------------------
 
-locals {
-  month_in_hour_duration = "${24 * 30}h"
-}
+# locals {
+#   month_in_hour_duration = "${24 * 30}h"
+# }
 
 resource "azurerm_app_service_certificate" "example" {
   name                = "example-cert"

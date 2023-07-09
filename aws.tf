@@ -38,12 +38,33 @@ check "check_budget_exceeded" {
 }
 
 # --------------------------------
+resource "aws_guardduty_detector" "example" {
+  enable = true
 
-data "aws_guardduty_detector" "example" {}
+  datasources {
+    s3_logs {
+      enable = true
+    }
+    kubernetes {
+      audit_logs {
+        enable = false
+      }
+    }
+    malware_protection {
+      scan_ec2_instance_with_findings {
+        ebs_volumes {
+          enable = true
+        }
+      }
+    }
+  }
+}
+
+# data "aws_guardduty_detector" "example" {}
 
 check "check_guardduty_findings" {
   data "aws_guardduty_finding_ids" "example" {
-    detector_id = data.aws_guardduty_detector.example.id
+    detector_id = aws_guardduty_detector.example.id
   }
 
   assert {
