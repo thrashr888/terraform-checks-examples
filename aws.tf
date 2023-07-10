@@ -9,7 +9,7 @@ resource "aws_budgets_budget" "ec2" {
 
   notification {
     comparison_operator        = "GREATER_THAN"
-    threshold                  = 80
+    threshold                  = 75
     threshold_type             = "PERCENTAGE"
     notification_type          = "FORECASTED"
     subscriber_email_addresses = ["thrashr888@gmail.com"]
