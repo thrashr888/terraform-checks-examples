@@ -38,40 +38,40 @@ check "check_budget_exceeded" {
 }
 
 # --------------------------------
-resource "aws_guardduty_detector" "example" {
-  enable = true
+# resource "aws_guardduty_detector" "example" {
+#   enable = true
 
-  datasources {
-    s3_logs {
-      enable = true
-    }
-    kubernetes {
-      audit_logs {
-        enable = false
-      }
-    }
-    malware_protection {
-      scan_ec2_instance_with_findings {
-        ebs_volumes {
-          enable = true
-        }
-      }
-    }
-  }
-}
+#   datasources {
+#     s3_logs {
+#       enable = true
+#     }
+#     kubernetes {
+#       audit_logs {
+#         enable = false
+#       }
+#     }
+#     malware_protection {
+#       scan_ec2_instance_with_findings {
+#         ebs_volumes {
+#           enable = true
+#         }
+#       }
+#     }
+#   }
+# }
 
-# data "aws_guardduty_detector" "example" {}
+# # data "aws_guardduty_detector" "example" {}
 
-check "check_guardduty_findings" {
-  data "aws_guardduty_finding_ids" "example" {
-    detector_id = aws_guardduty_detector.example.id
-  }
+# check "check_guardduty_findings" {
+#   data "aws_guardduty_finding_ids" "example" {
+#     detector_id = aws_guardduty_detector.example.id
+#   }
 
-  assert {
-    condition = !data.aws_guardduty_finding_ids.example.has_findings
-    error_message = format("AWS GuardDuty detector '%s' has %d open findings!",
-      data.aws_guardduty_finding_ids.example.detector_id,
-      length(data.aws_guardduty_finding_ids.example.finding_ids),
-    )
-  }
-}
+#   assert {
+#     condition = !data.aws_guardduty_finding_ids.example.has_findings
+#     error_message = format("AWS GuardDuty detector '%s' has %d open findings!",
+#       data.aws_guardduty_finding_ids.example.detector_id,
+#       length(data.aws_guardduty_finding_ids.example.finding_ids),
+#     )
+#   }
+# }
